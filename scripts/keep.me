@@ -1,0 +1,16 @@
+from datetime import datetime
+
+# Converter a coluna de data de nascimento para datetime
+df_combined["buyer_birth_date"] = pd.to_datetime(df_combined["buyer_birth_date"], errors="coerce")
+
+# Calcular a idade dos compradores
+current_year = datetime.now().year
+df_combined["buyer_age"] = current_year - df_combined["buyer_birth_date"].dt.year
+
+# Calcular a idade média por produto e país
+age_summary = df_combined.groupby(["delivery_country", "product_sold"]).agg(
+    average_age=("buyer_age", "mean")
+).reset_index()
+
+# Exibir o resumo
+age_summary
